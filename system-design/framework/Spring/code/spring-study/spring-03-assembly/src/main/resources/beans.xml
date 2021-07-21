@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dog" class="com.xinx.pojo.Dog">
+        <property name="name" value="旺财"/>
+    </bean>
+    <bean id="cat" class="com.xinx.pojo.Cat">
+        <property name="name" value="橘子"/>
+    </bean>
+
+    <bean id="person" class="com.xinx.pojo.Person" autowire="no">
+        <property name="name" value="地主"/>
+        <property name="dog" ref="dog"/>
+        <property name="cat" ref="cat"/>
+    </bean>
+
+    <!-- 自动装配，自动在容器上下文中查找对应的bean-->
+
+    <!--&lt;!&ndash; no &ndash;&gt;-->
+    <!--<bean id="personByNo" class="com.xinx.pojo.Person" autowire="no">-->
+    <!--    <property name="name" value="管家"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; ByName 根据名称装配(默认类名小写)&ndash;&gt;-->
+    <!--<bean id="personByName" class="com.xinx.pojo.Person" autowire="byName">-->
+    <!--    <property name="name" value="农民"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; ByType 根据类型装配，需保证此上下文中类型唯一 &ndash;&gt;-->
+    <!--<bean id="personByType" class="com.xinx.pojo.Person" autowire="byType">-->
+    <!--    <property name="name" value="打工仔"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; constructor 类似于byType但适用于构造函数参数 &ndash;&gt;-->
+    <!--<bean id="personByConstructor" class="com.xinx.pojo.Person" autowire="constructor">-->
+    <!--    <property name="name" value="仆人"/>-->
+    <!--</bean>-->
+
+</beans>

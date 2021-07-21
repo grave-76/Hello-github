@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 构造器方式注入 -->
+    <bean id="userInfo" class="com.xinx.pojo.UserInfo">
+        <constructor-arg name="id" value="001"/>
+        <constructor-arg type="java.lang.String" value="超人"/>
+        <constructor-arg index="2" value="18"/>
+        <constructor-arg type="java.lang.String" value="飞"/>
+        <constructor-arg name="address" ref="address"/>
+    </bean>
+
+    <!-- setter 方式注入 -->
+
+    <bean id="address" class="com.xinx.pojo.Address">
+        <property name="id" value="001"/>
+        <property name="province" value="江西"/>
+        <property name="city" value="南昌"/>
+        <property name="area" value="青山湖区"/>
+    </bean>
+
+    <bean id="person" class="com.xinx.pojo.Person">
+        <property name="id" value="001"/>
+        <property name="name" value="小强"/>
+        <!-- bean注入 -->
+        <property name="address" ref="address"/>
+        <!-- 数组 -->
+        <property name="books">
+            <array>
+                <value>三年模拟五年高考</value>
+                <value>高中语文</value>
+            </array>
+        </property>
+        <!-- list集合-->
+        <property name="hobbies">
+            <list>
+                <value>钱多</value>
+                <value>事少</value>
+                <value>不加班</value>
+            </list>
+        </property>
+        <!-- set集合 -->
+        <property name="friends">
+            <set>
+                <value>李四</value>
+                <value>王五</value>
+            </set>
+        </property>
+        <!-- map -->
+        <property name="games">
+            <map>
+                <entry key="a" value="消消乐"/>
+                <entry key="b" value="连连看"/>
+            </map>
+        </property>
+        <!-- null值 <value>标签内无值时为空字符串-->
+        <property name="money">
+            <null/>
+        </property>
+        <!-- 配置信息 -->
+        <property name="info">
+            <props>
+                <prop key="driver">driver</prop>
+                <prop key="url">url</prop>
+                <prop key="username">root</prop>
+                <prop key="password">123456</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

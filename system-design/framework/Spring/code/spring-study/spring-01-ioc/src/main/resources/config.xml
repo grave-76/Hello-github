@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 导入配置一般应用于团队开发，可将多个配置合并为一个总配置-->
+
+    <!-- 导入beans.xml配置信息-->
+    <import resource="beans.xml"/>
+
+</beans>

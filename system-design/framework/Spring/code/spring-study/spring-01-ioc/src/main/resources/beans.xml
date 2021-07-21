@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 在Spring中，构成应用程序主干并由Spring IO容器管理的对象称为bean-->
+
+    <!-- 使用spring创建对象:
+    id等价于变量名/bean名称，唯一;
+    <property>标签设置属性;
+    -->
+    <bean id="userInfo" class="com.xinx.pojo.UserInfo">
+        <property name="id" value="001"/>
+        <property name="name" value="张三"/>
+        <property name="code" value="Microsoft"/>
+    </bean>
+
+    <!-- 通过有参构造函数创建对象 -->
+    <!-- 1、参数名-->
+    <bean id="byProperty" class="com.xinx.pojo.UserInfo">
+        <constructor-arg name="id" value="001"/>
+        <constructor-arg name="name" value="张三"/>
+    </bean>
+
+    <!-- 2、下标（从0开始）-->
+    <bean id="byIndex" class="com.xinx.pojo.UserInfo">
+        <constructor-arg index="0" value="001"/>
+        <constructor-arg index="1" value="张三"/>
+    </bean>
+
+    <!-- 3、参数类型-->
+    <bean id="byType" class="com.xinx.pojo.UserInfo">
+        <constructor-arg type="java.lang.String" value="001"/>
+        <constructor-arg type="java.lang.String" value="张三"/>
+    </bean>
+
+    <!-- ================================== -->
+
+    <!-- Spring 配置-->
+
+    <!-- 别名 -->
+    <!-- name 可作为别名，且可配置多个(逗号、空格等分割)-->
+    <bean id="user" class="com.xinx.pojo.UserInfo" name="user1,user2">
+        <property name="id" value="001"/>
+        <property name="name" value="张三"/>
+        <property name="code" value="Microsoft"/>
+    </bean>
+
+    <alias name="user" alias="user3"/>
+
+    <!-- ref -->
+    <bean id="cat" class="com.xinx.pojo.Cat">
+        <property name="name" value="橘子"/>
+    </bean>
+
+    <bean id="user4" class="com.xinx.pojo.UserInfo">
+        <property name="cat" ref="cat"/>
+    </bean>
+
+</beans>

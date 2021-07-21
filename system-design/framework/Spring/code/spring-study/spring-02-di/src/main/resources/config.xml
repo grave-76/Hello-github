@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 使用前导入约束 -->
+
+    <!-- p命名空间-对应set注入 -->
+    <bean id="userInfoP" class="com.xinx.pojo.UserInfo"
+          p:id="001"
+          p:name="赵六"
+          p:age="18"
+          p:hobby="学习"
+    />
+
+    <!-- c命名空间-对应属性注入-需要有参构造器 -->
+    <bean id="userInfoC" class="com.xinx.pojo.UserInfo"
+          c:name="哈哈"
+          c:age="24"
+          c:hobby="赚钱"
+    />
+
+</beans>

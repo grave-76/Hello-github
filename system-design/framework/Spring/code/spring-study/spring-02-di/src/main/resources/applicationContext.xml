@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 静态工厂注入 调用静态工厂的方法获取所需的对象 -->
+
+    <bean id="company1" class="com.xinx.factory.Company">
+        <property name="id" value="001"/>
+        <property name="name" value="有限公司"/>
+        <property name="department" ref="staticFactory"/>
+    </bean>
+
+    <bean id="staticFactory" class="com.xinx.factory.DeptFactory" factory-method="initDept"/>
+
+    <!-- 实例工厂注入 首先new一个工厂，再获取所需的对象-->
+
+    <bean id="company2" class="com.xinx.factory.Company">
+        <property name="id" value="002"/>
+        <property name="name" value="文化有限公司"/>
+        <property name="department" ref="deptInstance"/>
+    </bean>
+
+    <bean id="deptFactory2" class="com.xinx.factory.DeptFactory" />
+
+    <bean id="deptInstance" factory-bean="deptFactory2" factory-method="getDept"/>
+
+</beans>
