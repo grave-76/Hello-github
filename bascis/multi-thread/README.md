@@ -466,3 +466,12 @@ ScheduledExecutorService  pool = Executors.newScheduledThreadPool();
 | `DiscardOldestPolicy`     | 丢弃队列最前面的任务（最早提交的），然后重新提交被拒绝的任务 |      |
 | `DiscardPolicy`           | 直接丢弃被拒绝的任务，不抛出异常                             |      |
 
+### 3.3 注意事项
+
+- 创建线程或线程池只定义有意义的线程名称，方便出错时回溯；
+- 线程资源通过线程池提供；
+  - 可减少在创建和销毁线程上所消耗的时间及系统资源的开销，解决资源不足的问题；
+  - 如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内存或者**过度切换**问题。
+- 线程池尽量不使用 `Executors` 创建，而通过 `ThreadPoolExecutor` 的方式，规避资源耗尽的风险；
+  - `FixedThreadPool` 和 `SingleThreadPool`: 允许的请求队列长度为 `Integer.MAX_VALUE`，可能会堆积大量的请求，从而导致 `OOM`；
+  - `CachedThreadPool` 和 `ScheduledThreadPool`: 允许的创建线程数量为 `Integer.MAX_VALUE`，可能会创建大量的线程，从而导致 `OOM`。
