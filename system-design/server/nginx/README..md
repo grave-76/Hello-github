@@ -43,8 +43,6 @@
 
 - 占有内存少，并发能力强；
 
-
-
 ### 3、负载均衡
 
 - 将原先集中到单台服务器的请求分发到多台服务器上，使各台服务器间的负载相对均衡；
@@ -111,10 +109,19 @@
 
 - 位置：conf/nginx.conf；
 
-- 由三部分构成：全局部分、events部分、http部分；
+- 
 
+- 由三部分构成
+
+  - **全局块**：全局指令，设置工作进程数，定义日志路径等；
+  - **events块**：设置处理轮询事件模型、每个工作进程最大连接数、http层超时时间等；
+  - **http块**：嵌套多个server，配置代理、缓存、日志定义等；
+    - upstream：负载均衡服务器设置，可配置多个upstream；
+    - server：配置虚拟主机相关参数，可配置多个server；
+      - location：配置请求路由，各种页面处理情况；
+  
   ```bash
-  # ******************** 全局部分 ********************
+  # ******************** 全局块 ********************
   #user  nobody;
   worker_processes  1; # nginx 处理并发的数量，值越大支持并发处理量越大
   
@@ -124,46 +131,34 @@
   
   #pid        logs/nginx.pid;
   
-  # ******************** events部分 ********************
+  # ******************** events块 ********************
   events {
-      worker_connections  1024; # 支持的最大连接数
+      worker_connections  1024;  # 支持的最大连接数
   }
   
-  # ******************** http部分 ********************
+  # ******************** http块 ********************
   http {
-      include       mime.types;
-      default_type  application/octet-stream;
+      include       mime.types;  # 文件扩展名与文件类型映射表
+      default_type  application/octet-stream; # 默认文件类型-text/plain
   
-      #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-      #                  '$status $body_bytes_sent "$http_referer" '
-      #                  '"$http_user_agent" "$http_x_forwarded_for"';
-  
-      #access_log  logs/access.log  main;
-  
-      sendfile        on;
-      #tcp_nopush     on;
+      # ......
   
       #keepalive_timeout  0;
-      keepalive_timeout  65;
-  
-      #gzip  on;
+      keepalive_timeout  65;  # 连接超时时间，默认-75s，可配置在http|server|location块
   
       server {
-          listen       80; # 当前监听的端口号
-          server_name  localhost; # 主机名称
+          listen       80;  # 当前监听的端口号，可同时监听多个
+          server_name  localhost;  # 监听的ip地址或域名，多个域名间空格分开
   
-          #charset koi8-r;
+          # ......
   
-          #access_log  logs/host.access.log  main;
-  
-  		# 配置请求转发，支持正则表达式 / 代表所有
+  		# 配置请求转发，支持正则匹配与条件判断匹配
           location / { 
-              root   html;
-              index  index.html index.htm;
-              proxy_pass http://127.0.0.1:8080 # 代理访问路径
+              root   html;  # 指定虚拟主机的网页根目录，可以是相对路径与绝对路径，此处指nginx根目录下的 html
+              index  index.html index.htm;  # 指定访问的默认首页地址
           }
   
-          #error_page  404              /404.html;
+          #error_page  404              /404.html;  # 错误页
   
           # redirect server error pages to the static page /50x.html
           #
@@ -171,23 +166,19 @@
           location = /50x.html {
               root   html;
           }
-  
-          # proxy the PHP scripts to Apache listening on 127.0.0.1:80
-          #
-          #location ~ \.php$ {
-          #    proxy_pass   http://127.0.0.1;
-          #}
       }
-  
   
       # another virtual host using mix of IP-, name-, and port-based configuration
       #
       server {
-          listen       9000
+          listen       9000 # 当前监听的端口号
           listen       somename:8080;
           server_name  somename  alias  another.alias;
   
           location /mytest1/ {
+          	root          F:/xjsccb-trunck/xjsccb-web/src/main/webapp; # 指定访问资源根目录
+          	alias         newtest;  # 指定访问别名
+          	index         index.html index.htm;  # 指定具体访问资源名称，可配置多个，直到匹配为止
               paroxy_pass   http://127.0.0.1:8080 # 代理访问路径
           }
           location /mytest2/ {
@@ -197,7 +188,24 @@
       }
   
   }
-  
   ```
 
-  
+### 4、root 与 alias
+
+```bash
+location /mytest1/ {
+    root          src/main/webapp; 
+    alias         newtest;  
+    index         index.html index.htm; 
+    paroxy_pass   http://127.0.0.1:8080 # 代理访问路径
+}
+```
+
+- root 
+  - 会将root值和location的值进行拼接，然后再拼接上URL剩余的部分以及index的值；
+  - eg：`src/main/webapp/mytest1/index.html`；
+- alias
+  - 将 alias 的值替换 location 的值，然后再上URL剩余的部分以及index的值；
+  - alias 的值后面需要带有 / ；
+  - eg：`newtest/index.html`；
+
