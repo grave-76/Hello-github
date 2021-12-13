@@ -2024,3 +2024,90 @@ public class MyTest() {
 }
 ```
 
+# 九、常用
+
+### 1、获取Bean
+
+- 获取spring容器中的Bean，实际上是通过spring上下文对象的`getBean()`方法获取；
+
+  ```java
+  public class CustomBeanUtil() {
+      
+      private static ApplicationContext applicationContext;
+      
+      /**
+  	 * 取得一个服务实例，用于只有一个服务实例的场景
+  	 * @param clazz 服务接口类型
+  	 * @return 返回一个服务实例，如果找不到服务实例或一个服务接口存在多个服务实例，则抛出RuntimeException异常
+  	 */
+  	@SuppressWarnings("unchecked")
+  	public static <T> T getService(Class<T> clazz) {
+  
+  		Map<?, ?> beans = applicationContext.getBeansOfType(clazz);
+  		if (beans == null || beans.isEmpty()) {
+  			throw new RuntimeException("No bean typed " + clazz.getName() + " is defined");
+  		}
+  
+  		if (beans.size() > 1) {
+  			throw new RuntimeException("Too many beans typed " + clazz.getName() + ", use getService(Class, String) instead");
+  		}
+  
+  		return (T) beans.values().iterator().next();
+  	}
+  
+  	/**
+  	 * 取得一个服务实例，用于存在多个服务实例的场景
+  	 * @param clazz 服务接口类型
+  	 * @param serviceName 服务名称
+  	 * @return 返回一个服务实例
+  	 */
+  	@SuppressWarnings("unchecked")
+  	public static <T> T getService(Class<T> clazz, String serviceName) {
+  		return (T) applicationContext.getBean(serviceName);
+  	}
+  }
+
+##### 1.1 初始化时保存 `ApplicationContext` 对象
+
+```java
+// 实现监听
+public class MyApplicationRunListener implements SpringApplicationRunListener {
+    
+    // 上下文
+    private static ApplicationContext applicationContext;
+    
+    @Override
+	public void contextPrepared(ConfigurableApplicationContext context) {
+		// 上下文准备完成后保存 ApplicationContext 对象
+        this.applicationContext = context;
+	}
+}
+```
+
+##### 1.2 实现 `ApplicationContextAware` 接口
+
+```java
+public class ServiceLocator implements ApplicationContextAware {
+	// 上下文
+    private static ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(ApplicationContext context) throws BeansException {
+        this.applicationContext = context;
+    }
+}
+```
+
+##### 1.3 继承自 `ApplicationObjectSupport` 抽象类
+
+```java
+public class MyBean extends ApplicationObjectSupport
+{
+    public ApplicationContext getContext()
+    {
+        return super.getApplicationContext();
+    }
+    // ......
+}
+```
+
