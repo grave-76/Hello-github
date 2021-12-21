@@ -308,7 +308,7 @@
   explain select * from `tb_user` where name = '张三';
   ```
 
-  ![image-20210904222949347](README.assets/image-20210904222949347.png)
+  ![image-20210904222949347](pictures/image-20210904222949347.png)
 
 - id
 
@@ -550,7 +550,7 @@ CREATE OR REPLACE VIEW viewname AS ...
 
 ### 1）层级划分
 
-![image-20211107193815295](README.assets/image-20211107193815295.png)
+![image-20211107193815295](pictures/image-20211107193815295.png)
 
 ##### 网络连接层
 

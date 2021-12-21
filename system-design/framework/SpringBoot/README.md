@@ -16,17 +16,17 @@
 
 - 简单的单体应用：
 
-  ![image-20210707221813988](README.assets/image-20210707221813988.png)
+  ![image-20210707221813988](pictures/image-20210707221813988.png)
 
 - 用户访问量变大导致一台服务器无法支撑时，增加服务器，负载均衡：
 
-  ![image-20210707222010668](README.assets/image-20210707222010668.png)
+  ![image-20210707222010668](pictures/image-20210707222010668.png)
 
 
 
 - 将静态资源独立出来，通过CDN等手段进行加速，从而提升应用整体效率：
 
-  ![image-20210707222133338](README.assets/image-20210707222133338.png)
+  ![image-20210707222133338](pictures/image-20210707222133338.png)
 
 - 单体应用的优点：
   - 开发效率高：功能都在单个程序内部；
@@ -204,7 +204,7 @@ public @interface SpringBootApplication {
   }
   ```
 
-  ![image-20210712225124182](README.assets/image-20210712225124182.png)
+  ![image-20210712225124182](pictures/image-20210712225124182.png)
 
 # 4、配置文件
 
@@ -495,7 +495,7 @@ public @interface SpringBootApplication {
 
 - 所在位置：
 
-  ![image-20210711172625767](README.assets/image-20210711172625767.png)
+  ![image-20210711172625767](pictures/image-20210711172625767.png)
 
 - 部分自动配置类信息如下：
 
@@ -686,7 +686,7 @@ public @interface SpringBootApplication {
 
 - 模板引擎是为了使用户界与业务数据分离，可以生成特定格式的文档，用于网站的模板引擎就是将模板文件和业务数据通过模板引擎生成一个HTML文件；
 
-  ![image-20210718211009773](README.assets/image-20210718211009773.png)
+  ![image-20210718211009773](pictures/image-20210718211009773.png)
 
 - 常用的模板引擎有 `Thymeleaf`、`Freemarker`、`Jsp` 等；
 - SpringBoot应用以`jar`方式打包，且使用内嵌`Tomcat`，默认不支持jsp；

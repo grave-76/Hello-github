@@ -12,7 +12,7 @@
 
   - 示例-基于servlet的MVC模式：
 
-    ![image-20210627155750055](README.assets/image-20210627155750055.png)
+    ![image-20210627155750055](pictures/image-20210627155750055.png)
 
 - Spring MVC 
 
@@ -43,7 +43,7 @@
 
 - `DispatcherServlet` 继承关系图：
 
-  ![image-20210627170424365](README.assets/image-20210627170424365.png)
+  ![image-20210627170424365](pictures/image-20210627170424365.png)
 
 ### 3、运行流程
 
@@ -53,7 +53,7 @@
  - <4> `DispatcherServlet`将`ModelAndView`传给视图解析器`ViewResolver`进行解析，返回具体`View`；
  - <5> `DispatcherServlet`对`View`进行渲染视图（即将模型数据填充至视图中），后响应给用户。
 
-![image-20210629233549747](README.assets/image-20210629233549747.png)
+![image-20210629233549747](pictures/image-20210629233549747.png)
 
 ### 4、使用
 

@@ -152,7 +152,7 @@
 
 - 常用命令：`rpush, lpop, lpush, rpop, lrange, len` 等；
 
-  ![image-20211218152415933](README.assets/image-20211218152415933.png)
+  ![image-20211218152415933](pictures/image-20211218152415933.png)
 
 - 应用场景：消息队列、慢查询；
 

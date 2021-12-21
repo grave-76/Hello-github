@@ -20,7 +20,7 @@ GitHub：https://github.com/spring-projects/spring-framework
 
 ### 2、组成
 
-![](Spring.assets/image-20210606181331286.png)
+![](pictures/image-20210606181331286.png)
 
 | 模块           | 说明                                                         |
 | -------------- | ------------------------------------------------------------ |
@@ -1016,7 +1016,7 @@ IOC的体系结构可简单分成两类：
 
 - 体系结构图：
 
-![image-20210607232145721](Spring.assets/image-20210607232145721.png)
+![image-20210607232145721](pictures/image-20210607232145721.png)
 
 - 主要接口：
 
@@ -1035,9 +1035,9 @@ IOC的体系结构可简单分成两类：
 - ApplicationContext 继承了 HierarchicalBeanFactory 和 ListableBeanFactory 接口，并通过其他接口扩展了BeanFactory的功能；
 - 体系结构图：
 
-<img src="Spring.assets/image-20210609222130339.png" alt="image-20210609222130339"  />
+<img src="pictures/image-20210609222130339.png" alt="image-20210609222130339"  />
 
-![image-20210607221938943](Spring.assets/image-20210607221938943.png)
+![image-20210607221938943](pictures/image-20210607221938943.png)
 
 | 名称                               | 描述                                                         |
 | ---------------------------------- | ------------------------------------------------------------ |
@@ -1053,7 +1053,7 @@ IOC的体系结构可简单分成两类：
 - BeanDefinition保存了Bean的定义信息，如类名、属性、依赖的Bean、是否是懒加载...
 - 我们所说的Spring容器中的Bean会转化成一个个BeanDefinition，存储在BeanFactory中；
 
-![image-20210612001156138](Spring.assets/image-20210612001156138.png)
+![image-20210612001156138](pictures/image-20210612001156138.png)
 
 - 主要子类/接口：
 
@@ -1719,7 +1719,7 @@ public class AnnotationPointcut {
 
 - 单个切面：around前置 -> before -> 方法 -> around后置 -> after -> afterReturning/afterThrowing
 
-![image-20210620214022411](Spring.assets/image-20210620214022411.png)
+![image-20210620214022411](pictures/image-20210620214022411.png)
 
 - 多个切面，可以使用@Order注解指定先后顺序，数字越小，优先级越高，先进后出
 
@@ -1733,7 +1733,7 @@ public class AnnotationPointcut {
 
 
 
-![image-20210620214417576](Spring.assets/image-20210620214417576.png)
+![image-20210620214417576](pictures/image-20210620214417576.png)
 
 # 八、事务
 
