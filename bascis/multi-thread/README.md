@@ -1,17 +1,21 @@
+[TOC]
+
 # 1、线程与进程
 
 ### 1.1 任务调度
 
 - 大部分的操作系统（Windows、Linux）的任务调度方式采用时间片轮转的抢占式调度；
 - 即一个任务执行一小段时间（时间片）后强制暂停去执行下一个任务，每个任务轮流执行；被暂停的任务状态转变为就绪状态，等待它的下一个时间片到来继续执行；
+- 采用时间片轮转方式是操作系统为了防止一个线程或者进程长时间占用 CPU 导致其他线程或进程饿死；
 - 由于CPU的执行效率非常高，时间片非常短，在各个任务之间快速切换，呈现出多个任务“同时执行”，即并发；
 
-![image-20210621104916901](C:\Users\prd-fujiaxin\Desktop\多线程.assets\image-20210621104916901-1624243761687.png)
+![image-20210621104916901](多线程.assets\image-20210621104916901-1624243761687.png)
 
 ### 1.2 进程
 
 - 操作系统作为计算机的管理者，负责任务的调度、资源的分配和管理；应用程序是具有某种功能的程序，运行在操作系统之上；
 - 而进程是一个具有一定独立功能的程序，在一个数据集上的一次动态执行的过程，是操作系统进行资源分配和调度的一个独立单位，是应用程序运行的载体；
+- 在 Java 中，当启动 main 函数时，就是启动了一个 JVM 的进程，而 main 函数所在的线程就是中共进程中的一个线程，也被称为主线程；
 - 组成：
   - 程序：用于描述进程要完成的功能，是控制进程执行的指令集；
   - 数据集合：程序在执行时所需要的数据和工作区；
@@ -24,7 +28,7 @@
 
 ### 1.3 线程
 
-- 线程是程序执行中一个单一都顺序控制流程，是程序执行的最小单位，处理器调度和分派的基本单位；
+- 线程是程序执行中一个单一的顺序控制流程，是程序执行的最小单位，处理器调度和分派的基本单位；
 - 一个进程包含一个或多个线程，各个线程之间共享进程所在的内存空间；
 - 与进程区别：
 
@@ -44,6 +48,16 @@
 - 进程之间不能共享数据，而线程可以，线程间通信快；
 - 系统创建进程需要重新分配系统资源，创建线程代价较小。
 
+### 1.5 上下文切换
+
+- 上下文：线程在执行过程中需要的运行条件和自身的状态；
+- 上下文切换：线程被切换时，需要保留当前线程的上下文，等待线程下次占用 CPU 的时候恢复现场；并且加载下一个将要占用 CPU 的线程上下文；
+- 当出现某些情况时，线程会从占用CPU状态中退出（前三种会发生线程切换）
+  - 调用`sleep()`、`wait()`等主动让出CPU；
+  - 时间片用完；
+  - 调用了阻塞类型的系统中断，如请求IO、线程阻塞等；
+  - 线程被终止或结束运行；
+
 # 2、Java 线程
 
 ### 2.1 生命周期
@@ -56,7 +70,7 @@
 
 - 运行状态（Running）：就绪状态的线程获得CPU资源执行 `run()` 方法后，此线程便处于运行状态；
 
-- 阻塞状态（Blocked）：线程执行 `sleep()`（睡眠）、`suspend()`（挂起）等方法，失去所占用的资源之后，该线程进入阻塞状态；在睡眠时间到达或再次获的资源后将会重新进入就绪状态；
+- 阻塞状态（Blocked）：线程执行 `sleep()`（睡眠）、`suspend()`（挂起）等方法，失去所占用的资源之后，该线程进入阻塞状态；在睡眠时间到达或再次获得资源后将会重新进入就绪状态；
 
   - 等待阻塞：运行状态中的线程执行 `wait()` 方法后；
   - 同步阻塞：线程获取`synchronized`同步锁失败后（同步锁被其他线程占用）；
@@ -164,7 +178,7 @@ public class ThreadTest
 - 创建一个类，实现 `Callable` 接口，实现 `call()` 方法（线程业务，并有返回值）；
 - 创建该类的实例对象，作为实参构造 `FutureTask` 对象；`FutureTask` 对象封装了该 `Callable`  对象的 `call()` 方法的返回值；
 - 使用 `FutureTask` 对象作为 `Thread` 对象的 `target` 创建线程并启动；
-- 可调用 `FutureTask` 对象的 `get()` 方法获取子线程执行结束的返回值；
+- 可调用 `FutureTask` 对象的 `get()` 方法获取子线程执行结束的返回值，注意`get()`方法会阻塞当前线程直到任务完成；
 - 代码示例：
 
 ```java
@@ -241,7 +255,7 @@ public class ThreadTest
 
 ### 2.4 Thread 类
 
-##### （1）常用方法
+##### 常用方法
 
 - 常用构造函数
   - `Thread()`
@@ -265,20 +279,61 @@ public class ThreadTest
 - `isAlive()`：判断当前线程是否存活；
 - ~~已弃用：`stop()`、`resume()`、`suspend()`~~ ...
 
-##### （2）方法比较
+##### start() 与 run()
 
-- `start()` 与 `run()`
-  - `start()`：启动线程，是真正实现多线程运行的方法，调用该方法后当前线程处于就绪状态，等待获得CPU资源后Java虚拟机会自动调用当前线程的`run()`方法；
-  - `run()`：线程体，是`Thread`类的一个普通方法；
-- 其他：
+- `start()`：启动线程，是真正实现多线程运行的方法，调用该方法后当前线程处于就绪状态，等待获得CPU资源后Java虚拟机会自动调用当前线程的`run()`方法；
+- `run()`：线程体，是`Thread`类的一个普通方法；
 
-| 方法       | `sleep()`   | `yield()`                | `join()`         | `wait()`               | `await()`              |
-| ---------- | ----------- | ------------------------ | ---------------- | ---------------------- | ---------------------- |
-| 隶属       | `Thread` 类 | `Thread` 类              | `Thread` 对象    | `Object` 对象          | `Condition` 对象       |
-| 是否释放锁 | 不释放      | 不释放                   | 当前线程不释放   | 释放                   | 释放                   |
-| 何时就绪   | 指定时间后  | 不阻塞，立刻进入就绪状态 | join的线程执行完 | 唤醒后                 | 唤醒后                 |
-| 唤醒方法   | 指定时间后  | 自动唤醒                 | join的线程执行完 | `notify()/notifyAll()` | `signal()/signalAll()` |
-| 执行环境   | 任意        | 任意                     | 任意             | 同步代码块             | 同步代码块             |
+##### sleep()、yield()、join()、wait()、await()
+
+| 方法           | `sleep()`                                                  | `yield()`                                    | `join()`         | `wait()`               | `await()`              |
+| -------------- | ---------------------------------------------------------- | -------------------------------------------- | ---------------- | ---------------------- | ---------------------- |
+| 隶属           | `Thread` 类                                                | `Thread` 类                                  | `Thread` 对象    | `Object` 对象          | `Condition` 对象       |
+| 是否释放锁     | 不释放                                                     | 不释放                                       | 当前线程不释放   | 释放                   | 释放                   |
+| 执行后线程状态 | 阻塞状态                                                   | 就绪状态                                     | 阻塞状态         | 阻塞状态               | 阻塞状态               |
+| 何时就绪       | 指定时间后                                                 | 不阻塞，立刻进入就绪状态                     | join的线程执行完 | 唤醒后                 | 唤醒后                 |
+| 唤醒方法       | 指定时间后                                                 | 自动唤醒                                     | join的线程执行完 | `notify()/notifyAll()` | `signal()/signalAll()` |
+| 执行环境       | 任意                                                       | 任意                                         | 任意             | 同步代码块             | 同步代码块             |
+| 使用场景       | 通常被用于暂停执行，给其他线程运行机会，且不考虑线程优先级 | 线程让步，让同优先级或更高优先级线程运行机会 |                  | 常用于线程间通信       |                        |
+
+- `sleep()`
+  - `Thread`类中的方法；
+  - 需要指定等待时间，使得当前线程暂停执行，进入阻塞状态，在指定时间后被唤醒进入就绪状态等待CPU资源分配；
+  - 会释放**CPU资源**，但不会释放**锁**；
+- `wait()`
+  - `Object`类中的方法；
+  - 必须在`synchronized`同步代码块中使用，使当前线程进入阻塞状态；
+  - 常用于线程间通信；
+  - 会释放**CPU资源**，且会释放**锁**；
+  - 调用`notify()`、`notifyAll()`会唤醒当前线程，使其进入就绪状态等待CPU资源分配；
+
+### 2.5 常见问题
+
+##### 线程死锁
+
+- 多个线程同时被阻塞，它们中的一个或全部都在等对方的资源释放，因而线程被无限阻塞，程序无法正常终止；
+
+##### 锁池与等待池
+
+- 锁池
+  - 线程想要进入某对象的`synchronized`方法或`synchronized`块之前，必须获得该对象的锁；
+  - 当线程A获得某对象的锁后，其余线程访问该对象的`synchronized`方法或`synchronized`时，因为该对象的锁被线程A获取，因此这些线程会进入该对象的锁池中，等候获取锁资源；
+- 等待池
+  - 线程A调用某对象的`wait()`方法后，线程A将会释放该对象的锁，而后进入到该对象的等待池中，等候被唤醒；
+  - 等待池中的线程不会去竞争该对象的锁；
+
+##### notify() 与 notifyAll()
+
+- `notify()` 
+  - 当有线程调用某对象的`notify()`方法后，会随机唤醒一个在该对象**等待池**中的wait线程，使被唤醒的线程移动到到该对象的**锁池**中竞争**CPU资源**；
+- `notifyAll()`
+  - 类似`notify()` ，区别在于此方法会唤醒所有在该对象**等待池**中的线程；
+
+##### sleep(0)的作用
+
+- 前言：Windows系统采用时间片轮转的抢占式调度去竞争CPU资源；
+- `sleep(0)`并非真的要将当前线程挂起0毫秒；
+- 而是`sleep()`方法会释放**CPU资源**，这时操作系统会重新进行一次CPU资源竞争，从而使得其他线程有机会获得CPU控制权；
 
 # 3、Java 线程池
 
@@ -287,7 +342,7 @@ public class ThreadTest
 ##### 1）基本概念
 
 - 存放线程的一个容器，或者说是一种多线程处理形式；
-- 处理过程中将任务添加到队列，然后在创建线程后自动启动这些任务；
+- 处理过程中将任务添加到队列，然后在创建线程后自动执行这些任务；
 - 执行完任务后线程并不会销毁，而是再线程池中等待下一个任务；
 - 作用：
   - 降低资源消耗：线程池不需要重复创建和销毁线程；
@@ -340,7 +395,7 @@ public class ThreadTest
 			|--ScheduledThreadPoolExecutor ： 继承ThreadPoolExecutor，实现了ScheduledExecutorService
 ```
 
-##### 1）`Executor`与`ExecutorService` 接口
+##### 1）Executor与ExecutorService 接口
 
 > `Executor`框架最基本的接口，只有一个执行接口，将任务本身与执行分离开来
 
@@ -388,7 +443,7 @@ public interface ExecutorService extends Executor {
 }
 ```
 
-##### 2）`Future` 接口
+##### 2）Future 接口
 
 > 代表一个异步的计算结果，提供了检测任务是否完成，检索结果等方法；
 
@@ -416,7 +471,7 @@ public interface Future<V> {
 }
 ```
 
-##### 3）`ThreadPoolExecutor` 类
+##### 3）ThreadPoolExecutor 类
 
 > `Executor`的具体实现，以内部线程池的方式对外提供管理任务执行、线程调度、线程池管理等服务
 >
@@ -443,6 +498,10 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
 > 提供了工厂方法来创建不同类型的线程池
 
+- 方法内部实际使用`ThreadPoolExecutor`的构造方法创建线程池；
+
+- 不建议使用`Executors` ，而推荐使用`ThreadPoolExecutor`，原因是可让开发者更加明确线程池的创建规则，规避资源耗尽的风险；
+
 ```java
 // 创建固定大小的线程池
 ExecutorService  pool = Executors.newFixedThreadPool() ;
@@ -466,7 +525,9 @@ ScheduledExecutorService  pool = Executors.newScheduledThreadPool();
 | `DiscardOldestPolicy`     | 丢弃队列最前面的任务（最早提交的），然后重新提交被拒绝的任务 |      |
 | `DiscardPolicy`           | 直接丢弃被拒绝的任务，不抛出异常                             |      |
 
-### 3.3 注意事项
+### 3.3 常见问题
+
+##### 线程池使用
 
 - 创建线程或线程池只定义有意义的线程名称，方便出错时回溯；
 - 线程资源通过线程池提供；
@@ -475,3 +536,162 @@ ScheduledExecutorService  pool = Executors.newScheduledThreadPool();
 - 线程池尽量不使用 `Executors` 创建，而通过 `ThreadPoolExecutor` 的方式，规避资源耗尽的风险；
   - `FixedThreadPool` 和 `SingleThreadPool`: 允许的请求队列长度为 `Integer.MAX_VALUE`，可能会堆积大量的请求，从而导致 `OOM`；
   - `CachedThreadPool` 和 `ScheduledThreadPool`: 允许的创建线程数量为 `Integer.MAX_VALUE`，可能会创建大量的线程，从而导致 `OOM`。
+
+##### execute() 与 submit()
+
+- `excecute()`
+  - 用于提交不需要返回值的任务；
+  - 因此也无法判断任务是否被线程池执行成功；
+- `submit()`
+  - 用于提交需要返回值的任务；
+  - 线程池会返回一个`Future`类型的对象，通过该对象可判断任务是否执行成功，且可通过该对象的`get()`方法获取返回值数据；
+  - 注意调用`get()`方法会阻塞当前线程直到任务完成；
+
+##### 配置线程池线程数量
+
+- CPU密集型任务
+  - 利用CPU计算能力的任务，如：需在内存中对大量数据计算、排序等；
+  - 主要消耗CPU资源，线程数可设置为**CPU核心数 + 1**；
+- IO密集型任务
+  - 涉及网络读取、文件读取之类的任务，此类任务等待IO操作完成时间较CPU计算耗费时间多；
+  - 系统会占用大部分时间处理I/O交互，线程数可设置为**CPU核心数 *2**
+
+# 4、常见关键字
+
+### 4.1 并发特性
+
+- 原子性
+  - 一个或多个操作，要么所有的操作全部都得到执行且不会被中断，要么都不执行；
+  - `synchronized` 可保证代码片段的原子性；
+- 可见性
+  - 当一个线程对共享变量进行了修改，那么其他的线程都可以立即知晓修改后的最新值；
+  - `volatile` 可保证共享变量的可见性；
+- 有序性
+  - 代码在执行过程中的先后顺序；
+  - Java在编译器以及运行期间会进行优化，代码执行顺序未必就是其编写顺序；
+  - `volatile` 可禁止指令进行重排序优化；
+
+### 4.2 synchronized 
+
+##### 简介
+
+- 解决多个线程之间访问资源的同步性；
+- 即可保证使用`synchronized` 关键字修饰的方法或代码块在任意时刻只能有一个线程执行；
+- 线程想要进入某对象的`synchronized`方法或`synchronized`块之前，必须获得该对象的锁；
+
+![image-20211207234509231](README.assets/image-20211207234509231.png)
+
+##### 使用方式
+
+- 修饰实例方法
+
+  - 给当前对象实例加锁，进入同步代码前需要获取**当前对象实例的锁**
+
+  ```java
+      synchronized void myMethod(){
+  		// 业务代码
+      }
+  ```
+
+- 修饰静态方法
+
+  - 给当前类加锁，会作用与类的所有对象实例，进入同步代码前需要获取**当前Class的锁**
+
+  ```java
+  	synchronized static void myMethod(){
+  		// 业务代码
+      }
+  ```
+
+- 修饰代码块
+
+  - 需指定加锁对象，并对指定对象/类加锁；
+  - 表示进入同步代码前需要获得**给定实例对象或类的锁**；
+
+  ```java
+  	synchronized(this|object) {
+      	//业务代码
+  	}
+  	synchronized(类.class) {
+      	//业务代码
+  	}
+  ```
+
+- 构造方法本身属于线程安全，不能使用该关键字修饰；
+
+### 4.3 volatile
+
+##### 简介
+
+- 只能修饰变量；
+
+- 在Java内存模型中，线程可以把变量保存至本地内存中，使用本地内存保存的变量（其他线程不可见），结束后再将变量写回至主存中，而不是直接在主存中进行读写；
+
+- 这样容易造成数据不一致，即一个线程在主存中修改了一个变量的值，而另一个线程还继续使用该变量在寄存器中的值；
+
+  ![image-20211209214343868](README.assets/image-20211209214343868.png)
+
+- 使用`volatile` 关键字，可以防止`JVM`的指令重排，并且保证变量的可见性；
+
+  ![image-20211209214953117](README.assets/image-20211209214953117.png)
+
+##### volatile  与 synchronized
+
+- `volatile` 是线程同步的轻量级实现，性能较 `synchronized` 要好；
+- `volatile` 只能用于变量，`synchronized` 可以修饰方法及代码块；
+- `volatile` 可以保证数据的可见性，但无法保证数据的原子性，`synchronized` 都可；
+- `volatile` 主要用于解决变量在多线程之间的可见性，`synchronized` 解决的是多个线程之间访问资源的同步性；
+
+# 5、ThreadLocal 类
+
+##### 简介
+
+- `ThreadLocal` 并非一个线程，而是线程的局部变量；
+
+- 通常情况下，我们创建的变量是可以被任何一个线程访问并修改的；
+- 而 `ThreadLocal` 类则让每个线程拥有自己专属的变量；
+- 创建一个 `ThreadLocal` 变量，那么访问这个变量的每个线程都会拥有这个变量的本地副本（仅本线程可见），从而避免了线程安全问题；
+
+#####  原理
+
+- 每一个线程中都有一个`threadLocals` 和 `inheritableThreadLocals` 变量，都属于 `ThreadLocalMap` 类型的变量；
+
+- 实际上，变量并非存储于 `ThreadLocal` 中，而是存储于每个线程的 `ThreadLocalMap` 中；
+
+- `ThreadLocalMap` 可理解为以 `ThreadLocal` 为key， `Object`为value的 `HashMap`；
+
+- `ThreadLocal` 可看作是对 `ThreadLocalMap` 的封装，传递变量值；
+
+  ```java
+  // Thread类
+  public class Thread implements Runnable {
+      //......
+      //与此线程有关的ThreadLocal值。由ThreadLocal类维护
+      ThreadLocal.ThreadLocalMap threadLocals = null;
+  
+      //与此线程有关的InheritableThreadLocal值。由InheritableThreadLocal类维护
+      ThreadLocal.ThreadLocalMap inheritableThreadLocals = null;
+      //......
+  }
+  
+  // ThreadLocal 类
+  
+  public void set(T value) {
+      Thread t = Thread.currentThread();
+      ThreadLocalMap map = getMap(t);
+      if (map != null)
+          map.set(this, value);
+      else
+          createMap(t, value);
+  }
+  ThreadLocalMap getMap(Thread t) {
+      return t.threadLocals;
+  }
+  ```
+
+# 6、Atomic 原子类
+
+
+
+# 7、AQS
+

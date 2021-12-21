@@ -1,3 +1,5 @@
+[TOC]
+
 # 一、设计模式
 
 ### 1、介绍
@@ -8,43 +10,13 @@
 
 ### 2、类型（23）
 
-##### 2.1 创建型模式（5）
+![image-20211208225447215](README.assets/image-20211208225447215.png)
 
-> 提供一种在创建对象的同时，隐藏创建逻辑的方式，而不是使用new运算符直接实例化对象。
-
-- 工厂模式（Factory Pattern）
-- 抽象工厂模式（Abstract Factory Patttern）
-- 单例模式（Singleton Pattern）
-- 建造者模式（Builder Pattern）
-- 原型模式（Prototype Pattern）
-
-##### 2.2 结构型模式（7）
-
-> 关注类和对象的组合
-
-- 适配器模式（Adapter Pattern）
-- 桥接模式（Bridge Pattern）
-- 组合模式（Composite Pattern）
-- 装饰器模式（Decorator Pattern）
-- 外观模式（Facade Pattern）
-- 享元模式（Flyweight Pattern）
-- 代理模式（Proxy Pattern）
-
-##### 2.3 行为型模式（11）
-
-> 关注对象之间的通信
-
-- 责任链模式（Chain of Responsibility Pattern）
-- 命令模式（Command Pattern）
-- 解释器模式（Interpreter Pattern）
-- 迭代器模式（Iterator Pattern）
-- 中介者模式（Mediator Pattern）
-- 备忘录模式（Memento Pattern）
-- 观察者模式（Observer Pattern）
-- 状态模式（State Pattern）
-- 策略模式（Strategy Pattern）
-- 模板模式（Template Pattern）
-- 访问者模式（Visitor Pattern）
+| 类型       | 数量 | 包含                                                         | 说明                                                         |
+| ---------- | ---- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 创建型模式 | 5    | 工厂模式（Factory Pattern） <br />抽象工厂模式（Abstract Factory Patttern）<br />单例模式（Singleton Pattern）<br />建造者模式（Builder Pattern）<br />原型模式（Prototype Pattern） | 提供一种在创建对象的同时，隐藏创建逻辑的方式，而不是使用new运算符直接实例化对象。 |
+| 结构型模式 | 7    | 适配器模式（Adapter Pattern） <br />桥接模式（Bridge Pattern）<br />组合模式（Composite Pattern） <br />装饰器模式（Decorator Pattern） <br />外观模式（Facade Pattern） <br />享元模式（Flyweight Pattern） <br />代理模式（Proxy Pattern） | 关注类和对象的组合。                                         |
+| 行为型模式 | 11   | 责任链模式（Chain of Responsibility Pattern）<br />命令模式（Command Pattern）<br />解释器模式（Interpreter Pattern） <br />迭代器模式（Iterator Pattern） <br />中介者模式（Mediator Pattern）<br />备忘录模式（Memento Pattern） <br />观察者模式（Observer Pattern） <br />状态模式（State Pattern） <br />策略模式（Strategy Pattern） <br />模板模式（Template Pattern） <br />访问者模式（Visitor Pattern） | 关注对象之间的通信。                                         |
 
 ### 3、六大原则
 
@@ -63,7 +35,7 @@
 
 （2）UML类图
 
-![](设计模式.assets/image-20210606181035127.png)
+![](README.assets/image-20210606181035127.png)
 
 （3）代码示例
 
@@ -151,7 +123,7 @@ public class MyTest {
 
 （2）UML类图
 
-![](设计模式.assets/image-20210606181106028.png)
+![](README.assets/image-20210606181106028.png)
 
 （3） 代码示例
 
@@ -236,7 +208,7 @@ public class MyTest {
 
 （2）UML类图
 
-![](设计模式.assets/image-20210606181220596.png)
+![](README.assets/image-20210606181220596.png)
 
 （3）代码示例
 
@@ -640,7 +612,7 @@ public class MyTest {
 
 （2）UML 类图
 
-![image-20210622223810742](设计模式.assets/image-20210622223810742-1624372692925.png)
+![image-20210622223810742](README.assets/image-20210622223810742-1624372692925.png)
 
 （3）代码示例
 
@@ -716,7 +688,7 @@ public class MyTest {
 
 （2）UML 类图
 
-![image-20210623003228091](设计模式.assets/image-20210623003228091-1624379549921.png)
+![image-20210623003228091](README.assets/image-20210623003228091-1624379549921.png)
 
 （3）代码示例
 
